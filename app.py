@@ -44,7 +44,7 @@ def _tag_view(tag_slug, page_slug, template):
     and returns a response loading those posts with the template provided
     """
 
-    page = helpers.to_int(flask.request.args.get('page'), default=1)
+    page = flask.request.args.get('page', default=1, type=int)
     tags = api.get_tags(slugs=[tag_slug])
 
     if not tags:
@@ -72,7 +72,7 @@ def _group_view(group_slug, page_slug, template):
     and returns a response loading those posts with the template provided
     """
 
-    page = int(flask.request.args.get('page') or '1')
+    page = flask.request.args.get('page', default=1, type=int)
     category_slug = flask.request.args.get('category')
 
     groups = api.get_groups(slugs=[group_slug])
@@ -145,7 +145,7 @@ def homepage():
     category = None
     sticky_posts, _, _ = helpers.get_formatted_expanded_posts(sticky=True)
     featured_posts = sticky_posts[:3] if sticky_posts else None
-    page = helpers.to_int(flask.request.args.get('page'), default=1)
+    page = flask.request.args.get('page', default=1, type=int)
     posts_per_page = 12
 
     if category_slug:
@@ -179,7 +179,7 @@ def alternate_homepage():
     category = None
     sticky_posts, _, _ = helpers.get_formatted_expanded_posts(sticky=True)
     featured_posts = sticky_posts[:3] if sticky_posts else None
-    page = helpers.to_int(flask.request.args.get('page'), default=1)
+    page = flask.request.args.get('page', default=1, type=int)
     posts_per_page = 12
 
     if category_slug:
@@ -208,8 +208,8 @@ def alternate_homepage():
 
 @app.route('/search')
 def search():
-    query = flask.request.args.get('q') or ''
-    page = helpers.to_int(flask.request.args.get('page'), default=1)
+    query = flask.request.args.get('q', default='')
+    page = flask.request.args.get('page', default=1, type=int)
     posts = []
     total_pages = None
     total_posts = None
@@ -320,9 +320,9 @@ def snappy():
 
 @app.route('/archives')
 def archives():
-    page = helpers.to_int(flask.request.args.get('page'), default=1)
-    year = helpers.to_int(flask.request.args.get('year'))
-    month = helpers.to_int(flask.request.args.get('month'))
+    page = flask.request.args.get('page', default=1, type=int)
+    year = flask.request.args.get('year', type=int)
+    month = flask.request.args.get('month', type=int)
     group_slug = flask.request.args.get('group')
     category_slug = flask.request.args.get('category')
 
